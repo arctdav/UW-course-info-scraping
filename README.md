@@ -5,3 +5,5 @@ Description: This Python side project scraps all UWaterloo course information fr
 Please read version 2 first. (all uw course v2.py)
 
 Project Finish Date: September 3, 2018
+
+Please do not spam their website. 
