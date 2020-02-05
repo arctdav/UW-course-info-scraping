@@ -1,0 +1,24 @@
+Metadata-Version: 2.1
+Name: uwaterlooCourseInfoScraper
+Version: 1.0.0
+Summary: This Python side project scraps all UWaterloo course information         from its website, and exports all these information into an Excel file.         This script used BeautifulSoup from bs4, request, and csv Python libraries         to achieve such goal. Please do not spam their website.
+Home-page: https://github.com/arctdav/UW-course-info-scraping
+Author: arctdav
+Author-email: arctdav@gmail.com
+License: UNKNOWN
+Description: # Python Side Project: Web Scraping for course information
+        
+        Description: This Python side project scraps all UWaterloo course information from its website, and exports all these information into an Excel file. This script used BeautifulSoup from bs4, request, and csv Python libraries to achieve such goal.
+        
+        Please read version 2 first. (all uw course v2.py)
+        
+        Project Finish Date: September 3, 2018
+        
+        Please do not spam their website. 
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown

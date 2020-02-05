@@ -1,0 +1,8 @@
+README.md
+setup.py
+uwaterloo-course-scraper/__init__.py
+uwaterloo-course-scraper/course_scraper.py
+uwaterlooCourseInfoScraper.egg-info/PKG-INFO
+uwaterlooCourseInfoScraper.egg-info/SOURCES.txt
+uwaterlooCourseInfoScraper.egg-info/dependency_links.txt
+uwaterlooCourseInfoScraper.egg-info/top_level.txt
