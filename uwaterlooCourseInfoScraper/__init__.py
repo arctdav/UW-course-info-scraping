@@ -2,10 +2,20 @@
 import requests
 import csv
 from bs4 import BeautifulSoup
+from typing import List
 
 #!######################### Get Course Prefix ##################################
 # * Get prefix from: schedule of classes for undergraduate students
-def getPrefix():
+def getPrefix() -> List[str]:
+    """
+    Get the most up-to-date course prefix list from www.adm.uwaterloo.ca
+
+    Parameters:
+        None
+    
+    Return:
+        List[str]
+    """
     course_prefix = []
 
     # Access the course prefix website
@@ -23,6 +33,15 @@ def getPrefix():
     return course_prefix
 
 def requestCourseEnroll(sess, subject, cournum):
+    """
+    Get a request instance from http://www.adm.uwaterloo.ca/cgi-bin/cgiwrap/infocour/salook.pl
+    after requesting the class enrollment data
+
+    Parameters:
+        sess: int or str
+        subject: str
+        cournum: int or str
+    """
     if not sess or not subject or not cournum:
         print("ERROR: please input ALL of the sess, subject, cournum parameters")
         return None
@@ -43,7 +62,7 @@ def requestCourseEnroll(sess, subject, cournum):
         req = requests.post(url, headers=headers, data=data)
 
         if req.status_code == requests.codes.ok:
-            print("Request successful")
+            print("Request Successful")
             return req
         else:
             print("Request ERROR: %s" % req.status_code)
