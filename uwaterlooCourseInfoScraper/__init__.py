@@ -8,7 +8,7 @@ from typing import List
 # * Get prefix from: schedule of classes for undergraduate students
 def getPrefix() -> List[str]:
     """
-    Get the most up-to-date course prefix list from www.adm.uwaterloo.ca
+    Get the most up-to-date course prefix list from http://www.adm.uwaterloo.ca/infocour/CIR/SA/under.html
 
     Parameters:
         None
@@ -41,6 +41,9 @@ def requestCourseEnroll(sess, subject, cournum):
         sess: int or str
         subject: str
         cournum: int or str
+    
+    Return:
+        Request instance
     """
     if not sess or not subject or not cournum:
         print("ERROR: please input ALL of the sess, subject, cournum parameters")
@@ -57,7 +60,7 @@ def requestCourseEnroll(sess, subject, cournum):
         "Referer": "http://www.adm.uwaterloo.ca/infocour/CIR/SA/under.html",
         "Upgrade-Insecure-Requests": "1"}
             
-        data = "level=under&sess=%s&subject=%s&cournum=%s" % (sess, subject, cournum)
+        data = "level=under&sess=%s&subject=%s&cournum=%s" % (sess, subject.upper(), cournum)
 
         req = requests.post(url, headers=headers, data=data)
 
