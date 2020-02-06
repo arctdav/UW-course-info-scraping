@@ -1,14 +1,4 @@
 # -*- coding: utf-8 -*-
-
-########################## Version 2 Update Note ##################################
-# 1. Version 2 added antireq and coreq, both are definitely needed for my future  #
-#    study sequence planning.                                                     #
-# 2. Changed the info collection for prereq from a set index (i.e. index number 5)#
-#    into searching by for loop, for prereq, antireq, and coreq                   #
-# Version 3 Plan: Get which course prefix belong to which faculty by scraping this#
-# this website: https://ugradcalendar.uwaterloo.ca/page/Course-Descriptions-Index #
-###################################################################################
-
 import requests
 import csv
 from bs4 import BeautifulSoup
@@ -32,65 +22,29 @@ def getPrefix():
         course_prefix.append(i.get('value'))
     return course_prefix
 
-#!#################### Record All Undergrad Course Info ################################
-# * use prefix list from getPrefix(), to get all undergraduate courses in UW
-def getCourseInfo(course_prefix = getPrefix()):
-    # Write column headers into the Excel file
-    myfile = open('UWAllCourseList_v2.csv', 'w')
-    f = csv.writer(myfile)
-    f.writerow(['Prefix of Website','Course Code', 'Course Name', 'Course Description', 'Prereq','Antireq','Coreq'])
+def requestCourseEnroll(sess, subject, cournum):
+    if not sess or not subject or not cournum:
+        print("ERROR: please input ALL of the sess, subject, cournum parameters")
+        return None
+    else:
+        url = 'http://www.adm.uwaterloo.ca/cgi-bin/cgiwrap/infocour/salook.pl'
 
-    # ecount: the number of exceptions
-    ecount = 0
+        headers = {"Accept-Language": "en-US,en;q=0.5",
+        "Accept-Encoding": "gzip,deflate",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": "45",
+        "Origin": "http://www.adm.uwaterloo.ca",
+        "Connection": "keep-alive",
+        "Referer": "http://www.adm.uwaterloo.ca/infocour/CIR/SA/under.html",
+        "Upgrade-Insecure-Requests": "1"}
+            
+        data = "level=under&sess=%s&subject=%s&cournum=%s" % (sess, subject, cournum)
 
-    # Loop through all UW course website by course prefix
-    for prefix in course_prefix:
-        print("Prefix '"+prefix+"' starts")
+        req = requests.post(url, headers=headers, data=data)
 
-        # Access the current prefix course web page
-        page = requests.get('http://www.ucalendar.uwaterloo.ca/1819/COURSE/course-'\
-                            + prefix + '.html')
-        soup = BeautifulSoup(page.text, 'html.parser')
-
-        # Get all course table tag by BeautifulSoup parsing
-        a = soup.find_all('table')
-        useful_table_list = a#[4:len(a)-1]
-
-        # Get and record course information by looping though the list of course table tag
-        for course in useful_table_list:
-            preq = 'None'
-            anti = 'None'
-            coreq = 'None'
-            try:
-                code = course.find('a').get('name')
-                #print(code + ' starts')
-                name = course.find_all('b')[1].contents[0]
-                description = course.find_all('td')[3].contents[0]
-                td_lst = course.find_all('td')
-                for i in range(len(td_lst)):
-                    if i >= 4:
-                        try:
-                            if 'Prereq:' in td_lst[i].contents[0].contents[0]:
-                                preq = td_lst[i].contents[0].contents[0]
-                        except:
-                            preq = 'ERROR!!!'
-                        try:
-                            if 'Antireq:' in td_lst[i].contents[0].contents[0]:
-                                anti = td_lst[i].contents[0].contents[0]
-                        except:
-                            anti = 'ERROR!!!'
-                        try:
-                            if 'Coreq:' in td_lst[i].contents[0].contents[0]:
-                                coreq = td_lst[i].contents[0].contents[0]
-                        except:
-                            preq = 'ERROR!!!'
-                        
-                #print("prefix: "+prefix+'\n'+"code: "+code+'\n'+"preq: "+preq+'\n'+"anti: "+anti+'\n'+"coreq: "+coreq+'\n'+"desc"+description
-                f.writerow([prefix, code, name, description, preq, anti, coreq])
-            except:
-                ecount += 1
-
-    # Prints out the progress
-    print('total useless data = ' + str(ecount))
-    print('Work Done')
-    myfile.close()
+        if req.status_code == requests.codes.ok:
+            print("Request successful")
+            return req
+        else:
+            print("Request ERROR: %s" % req.status_code)
+            return req
